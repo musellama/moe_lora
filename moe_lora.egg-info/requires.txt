@@ -1,0 +1,8 @@
+torch>=2.0.0
+transformers>=4.30.0
+numpy>=1.24.0
+pydantic>=2.0.0
+loguru>=0.7.0
+tqdm>=4.65.0
+accelerate>=0.20.0
+peft>=0.4.0

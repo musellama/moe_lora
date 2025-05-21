@@ -1,1 +1,101 @@
-# moe_lora
+# MOE-LORA: 扩展式适配器架构框架
+
+MOE-LORA是一个创新的大模型能力扩展框架，通过参数级融合实现专业能力与通用能力的无缝整合。该框架保持基础大模型不变，通过动态融合专家模型参数实现能力扩展，确保高效率、高灵活性和可持续扩展性。
+
+## 主要特性
+
+- 参数级融合：实现基础模型与专家模型的精确参数融合
+- 动态专家选择：基于输入内容智能选择相关专家模型
+- 多种融合策略：支持加权求和、注意力融合等多种融合方式
+- 资源优化：专家模型常驻内存，按需加载到显存
+- 可扩展性：支持动态添加新的专家模型和融合策略
+
+## 安装
+
+```bash
+pip install -r requirements.txt
+```
+
+## 快速开始
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from moe_lora.base.base_model import BaseModel
+from moe_lora.expert.expert_model import ExpertModel, ExpertMetadata
+from moe_lora.fusion.fusion_engine import FusionEngine
+from moe_lora.scheduler.expert_scheduler import ExpertScheduler
+
+# 初始化基础模型
+base_model_name = "gpt2"
+model = AutoModelForCausalLM.from_pretrained(base_model_name)
+tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+base_model = BaseModel(model, tokenizer)
+
+# 初始化融合引擎和调度器
+fusion_engine = FusionEngine()
+scheduler = ExpertScheduler(base_model, fusion_engine)
+
+# 创建并注册专家模型
+expert_metadata = ExpertMetadata(
+    name="code_expert",
+    description="代码生成专家",
+    domain="programming",
+    version="1.0.0",
+    capabilities=["code", "programming", "python"],
+    base_model_name=base_model_name
+)
+expert_model = ExpertModel(model, expert_metadata)
+scheduler.register_expert(expert_model)
+
+# 处理输入
+input_text = "Write a Python function to calculate fibonacci numbers"
+fused_state = scheduler.process_input(input_text)
+```
+
+## 项目结构
+
+```
+moe_lora/
+├── base/           # 基础模型相关代码
+├── expert/         # 专家模型相关代码
+├── fusion/         # 融合策略相关代码
+└── scheduler/      # 调度器相关代码
+```
+
+## 核心组件
+
+### 1. 基础层 (BaseModel)
+- 管理预训练大模型
+- 处理模型状态
+- 提供参数映射
+
+### 2. 专家层 (ExpertModel)
+- 管理领域专家模型
+- 提供专家元数据
+- 确保与基础模型兼容
+
+### 3. 融合层 (FusionEngine)
+- 实现多种融合策略
+- 管理参数融合过程
+- 支持自定义融合方法
+
+### 4. 调度层 (ExpertScheduler)
+- 管理专家模型选择
+- 控制资源调度
+- 处理输入输出
+
+## 开发计划
+
+- [ ] 实现更多融合策略
+- [ ] 添加专家模型训练接口
+- [ ] 优化内存管理
+- [ ] 添加性能监控
+- [ ] 支持分布式部署
+
+## 贡献指南
+
+欢迎提交 Pull Request 或创建 Issue 来帮助改进这个项目。
+
+## 许可证
+
+MIT License 
