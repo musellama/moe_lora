@@ -16,6 +16,9 @@ MOE-LORA是一个创新的大模型能力扩展框架，通过参数级融合实
 pip install -r requirements.txt
 ```
 
+## 快速测试
+python examples/interactive_qa.py
+
 ## 快速开始
 
 ```python
