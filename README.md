@@ -17,7 +17,9 @@ pip install -r requirements.txt
 ```
 
 ## 快速测试
+```bash
 python examples/interactive_qa.py
+```
 
 ## 快速开始
 
